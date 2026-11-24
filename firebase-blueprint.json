@@ -1,0 +1,112 @@
+{
+  "entities": {
+    "WorkItem": {
+      "title": "WorkItem",
+      "description": "A daily task, class batch session, or client deliverable that can be scheduled, marked complete, reminded, and synced to Android Calendar.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "title": { "type": "string", "description": "Title of the task, class batch, or office work." },
+        "notes": { "type": "string", "description": "Optional notes or syllabus/deliverable details." },
+        "category": {
+          "type": "string",
+          "enum": ["CLASS_BATCH", "OFFICE_WORK", "CLIENT_TASK", "PERSONAL"],
+          "description": "Work stream category."
+        },
+        "scheduledDate": { "type": "string", "description": "Scheduled date in YYYY-MM-DD format." },
+        "startTime": { "type": "string", "description": "Start time in HH:mm 24-hour format, or empty string if unscheduled." },
+        "durationMinutes": { "type": "integer", "description": "Duration in minutes (15 to 720)." },
+        "recurrence": {
+          "type": "string",
+          "enum": ["NONE", "DAILY", "WEEKDAYS", "WEEKLY"],
+          "description": "Recurrence pattern for batches or routine work."
+        },
+        "completed": { "type": "boolean", "description": "Whether the task is marked complete." },
+        "batchOrGroup": { "type": "string", "description": "Optional batch code or project group name." },
+        "clientId": { "type": "string", "description": "Linked client document ID, or empty string." },
+        "clientName": { "type": "string", "description": "Linked client display name, or empty string." },
+        "billable": { "type": "boolean", "description": "Whether this work item is billable to a client." },
+        "billingAmount": { "type": "number", "description": "Expected billing fee if billable." },
+        "reminderMinutesBefore": { "type": "integer", "description": "Minutes before startTime for reminder (-1 disables)." },
+        "calendarEventId": { "type": "integer", "description": "Android CalendarContract event ID (-1 if not synced)." },
+        "calendarSynced": { "type": "boolean", "description": "Whether synced to device calendar." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update (FieldValue.serverTimestamp())." }
+      },
+      "required": [
+        "userId", "title", "notes", "category", "scheduledDate", "startTime",
+        "durationMinutes", "recurrence", "completed", "batchOrGroup",
+        "clientId", "clientName", "billable", "billingAmount",
+        "reminderMinutesBefore", "calendarEventId", "calendarSynced",
+        "createdAt", "updatedAt"
+      ]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "A client, coaching student group, or organization billed for work.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "name": { "type": "string", "description": "Client or batch contact name." },
+        "organization": { "type": "string", "description": "Company, school, or batch label." },
+        "email": { "type": "string", "description": "Client email address." },
+        "phone": { "type": "string", "description": "Client phone number." },
+        "defaultRate": { "type": "number", "description": "Default session or project rate." },
+        "currencySymbol": { "type": "string", "description": "Currency symbol such as $, ₹, €, £." },
+        "notes": { "type": "string", "description": "Billing or schedule notes." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update (FieldValue.serverTimestamp())." }
+      },
+      "required": [
+        "userId", "name", "organization", "email", "phone",
+        "defaultRate", "currencySymbol", "notes", "createdAt", "updatedAt"
+      ]
+    },
+    "Invoice": {
+      "title": "Invoice",
+      "description": "A billing record for client work or class batches with payment status and due-date reminders.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "invoiceNumber": { "type": "string", "description": "Human-readable invoice reference code." },
+        "clientId": { "type": "string", "description": "Linked client ID or empty string." },
+        "clientName": { "type": "string", "description": "Client or batch name billed." },
+        "workTitle": { "type": "string", "description": "Summary of work or sessions billed." },
+        "workItemId": { "type": "string", "description": "Optional linked WorkItem ID or empty string." },
+        "amount": { "type": "number", "description": "Total billed amount (> 0)." },
+        "paidAmount": { "type": "number", "description": "Amount paid so far (0 <= paidAmount <= amount)." },
+        "currencySymbol": { "type": "string", "description": "Currency symbol." },
+        "status": {
+          "type": "string",
+          "enum": ["UNPAID", "PARTIAL", "PAID", "OVERDUE"],
+          "description": "Current payment status."
+        },
+        "dueDate": { "type": "string", "description": "Payment due date in YYYY-MM-DD format." },
+        "paidDate": { "type": "string", "description": "Date settled in YYYY-MM-DD format, or empty string." },
+        "notes": { "type": "string", "description": "Invoice payment terms or notes." },
+        "reminderEnabled": { "type": "boolean", "description": "Whether payment due reminder is enabled." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update (FieldValue.serverTimestamp())." }
+      },
+      "required": [
+        "userId", "invoiceNumber", "clientId", "clientName", "workTitle",
+        "workItemId", "amount", "paidAmount", "currencySymbol", "status",
+        "dueDate", "paidDate", "notes", "reminderEnabled", "createdAt", "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/workItems/{itemId}": {
+      "schema": { "$ref": "#/entities/WorkItem" },
+      "description": "User-owned daily tasks, class batch sessions, office tasks, and client deliverables."
+    },
+    "/users/{userId}/clients/{clientId}": {
+      "schema": { "$ref": "#/entities/Client" },
+      "description": "User-owned client and batch contact directory."
+    },
+    "/users/{userId}/invoices/{invoiceId}": {
+      "schema": { "$ref": "#/entities/Invoice" },
+      "description": "User-owned client billing records and payment statuses."
+    }
+  }
+}

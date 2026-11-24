@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">DayLedger</string>
+    <string name="tagline_subtitle">Daily tasks, batch schedules, client billing &amp; reminders</string>
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="sign_out">Sign out</string>
+    <string name="nav_today">Today</string>
+    <string name="nav_schedule">Calendar</string>
+    <string name="nav_billing">Billing</string>
+    <string name="nav_clients">Clients</string>
+    <string name="action_add_task">New Task / Batch</string>
+    <string name="action_add_invoice">New Invoice</string>
+    <string name="action_add_client">New Client</string>
+    <string name="calendar_connect">Connect Device Calendar</string>
+    <string name="calendar_connected">Calendar Connected</string>
+    <string name="notifications_enable">Enable Reminders</string>
+</resources>

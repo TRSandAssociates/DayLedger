@@ -1,0 +1,6 @@
+{
+  "name": "DayLedger",
+  "description": "Daily task tracker, calendar-connected batch class and client work scheduler, billing ledger, and payment reminders.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
